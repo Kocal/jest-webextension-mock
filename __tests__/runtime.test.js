@@ -10,10 +10,17 @@ describe('browser.runtime', () => {
   });
   test('sendMessage', done => {
     const callback = jest.fn(() => done());
-    expect(jest.isMockFunction(browser.runtime.sendMessage));
-    browser.runtime.sendMessage({ test: 'message' }, callback);
+    const message = { test: 'message' };
+    expect(jest.isMockFunction(browser.runtime.sendMessage)).toBe(true);
+    browser.runtime.sendMessage(message);
+    expect(browser.runtime.sendMessage).toHaveBeenCalledWith(message);
     expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(1);
+    browser.runtime.sendMessage(message, callback);
+    expect(browser.runtime.sendMessage).toHaveBeenCalledTimes(2);
     expect(callback).toHaveBeenCalledTimes(1);
+  });
+  test('sendMessage promise', () => {
+    return expect(browser.runtime.sendMessage({})).resolves.toBeUndefined();
   });
   test('onMessage.addListener', () => {
     expect(jest.isMockFunction(browser.runtime.onMessage.addListener));

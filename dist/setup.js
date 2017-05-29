@@ -95,9 +95,11 @@ var runtime = {
     };
     return connection;
   }),
-  sendMessage: jest.fn(function (message) {
-    var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
-    return callback();
+  sendMessage: jest.fn(function (message, cb) {
+    if (cb !== undefined) {
+      return cb();
+    }
+    return Promise.resolve();
   }),
   onMessage: {
     addListener: jest.fn()
